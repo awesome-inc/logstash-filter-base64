@@ -57,7 +57,7 @@ class LogStash::Filters::Base64 < LogStash::Filters::Base
       filter_matched(event)
     rescue => e
       event.tag("_base64codingfailure")
-      base64log(:error, "",
+      base64log(:error, "Caught exception while trying to process event",
         :event => event,
         :message => e.message,
         :class => e.class,
@@ -66,8 +66,8 @@ class LogStash::Filters::Base64 < LogStash::Filters::Base
     end
   end # def filter
   
-  def base64log(urgency, msg, opts)
-    @logger.send urgency, "[BASE64 FILTER] #{msg}", opts,
-      :source => @source, :destination => @destination, :direction => @direction
+  def base64log(urgency, msg, opts={})
+    @logger.send urgency, "[BASE64 FILTER] #{msg}", opts.merge(
+      :source => @source, :destination => @destination, :direction => @direction)
   end # def base64log
 end # class LogStash::Filters::Example
